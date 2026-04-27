@@ -219,9 +219,9 @@
 
 <!-- ===== CONFIGURAÇÃO DA API KEY ===== -->
 <script>
-  // 🔑 COLE SUA API KEY DO GOOGLE GEMINI AQUI:
-  const API_KEY = 'AIzaSyAC3CRxe_bEsJkGzwyY0w4xMsE36zMwmCQ';
-  // Obtenha GRATUITAMENTE em: https://aistudio.google.com → Get API Key
+  // 🔑 COLE SUA API KEY DA GROQ AQUI:
+  const API_KEY = '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';
+  // Obtenha GRATUITAMENTE em: https://console.groq.com → API Keys
 </script>
 
 <!-- LOGIN -->
@@ -532,63 +532,64 @@ const moodCtx    = ['','Percebi que você está se sentindo mal. Como posso te a
 
 const state = { name:'', hydra:0, moodLog:[], planCount:0, checkins:0, chatHistory:[], visaoImageData:null, vozText:'', vozUtterance:null };
 
-/* ---- API CALL - Google Gemini ---- */
-const GEMINI_MODEL = 'gemini-2.0-flash';
-const GEMINI_URL = () => `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${API_KEY}`;
+/* ---- API CALL - Groq ---- */
+
+
 
 
 function checkKey() {
   if (!API_KEY || API_KEY === 'SUA_API_KEY_AQUI') {
-    throw new Error('API Key não configurada. Edite o arquivo e substitua SUA_API_KEY_AQUI pela sua chave do Gemini.');
+    throw new Error('API Key não configurada. Edite o arquivo e substitua SUA_API_KEY_AQUI pela sua chave da Groq.');
   }
 }
 
 async function callAI(prompt, imageData) {
   checkKey();
-  const parts = [];
+  const messages = [];
   if (imageData) {
-    parts.push({ inline_data: { mime_type: 'image/jpeg', data: imageData } });
+    messages.push({
+      role: 'user',
+      content: [
+        { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + imageData } },
+        { type: 'text', text: prompt }
+      ]
+    });
+  } else {
+    messages.push({ role: 'user', content: prompt });
   }
-  parts.push({ text: prompt });
 
   let res, data;
   try {
-    res = await fetch(GEMINI_URL(), {
+    res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts }] })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+      body: JSON.stringify({ model: 'llama-3.3-70b-versatile', max_tokens: 1024, messages })
     });
     data = await res.json();
   } catch(e) {
     throw new Error('Falha de conexão com a API. Verifique sua internet. Detalhe: ' + e.message);
   }
-  if (data.error) throw new Error('Gemini: ' + (data.error.message || JSON.stringify(data.error)));
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  if (data.error) throw new Error('Groq: ' + (data.error.message || JSON.stringify(data.error)));
+  return data.choices?.[0]?.message?.content || '';
 }
 
 async function callAIChat(sysPrompt, history) {
   checkKey();
-  const contents = history.map(msg => ({
-    role: msg.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: msg.content }]
-  }));
+  const messages = [{ role: 'system', content: sysPrompt }, ...history];
 
   let res, data;
   try {
-    res = await fetch(GEMINI_URL(), {
+    res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: sysPrompt }] },
-        contents
-      })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+      body: JSON.stringify({ model: 'llama-3.3-70b-versatile', max_tokens: 1024, messages })
     });
     data = await res.json();
   } catch(e) {
     throw new Error('Falha de conexão com a API. Verifique sua internet. Detalhe: ' + e.message);
   }
-  if (data.error) throw new Error('Gemini: ' + (data.error.message || JSON.stringify(data.error)));
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  if (data.error) throw new Error('Groq: ' + (data.error.message || JSON.stringify(data.error)));
+  return data.choices?.[0]?.message?.content || '';
 }
 
 /* ---- LOGIN ---- */
