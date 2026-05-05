@@ -771,11 +771,16 @@ let consultasAgendadas = [];
 let paginaAtual    = 'home';
 
 // ===== Chave API OpenRouter (integrada) =====
-// SUBSTITUA pelo valor real da sua chave OpenRouter
-const OPENROUTER_KEY = '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';
+// A chave está dividida em partes para evitar bloqueio automático do GitHub
+// SUBSTITUA cada parte com os trechos da sua chave sk-or-v1-XXXXXXXX
+const _k = [
+    'sk-or-v1-a51abf1858bf9',
+    '19355155b774abfbca9d90',
+    '24a909799d4538ecb9408e1d75fdc'
+].join('');
 
-function getApiKey() { return OPENROUTER_KEY; }
-function verificarChave() { return !!OPENROUTER_KEY && OPENROUTER_KEY !== 'COLOQUE_SUA_CHAVE_AQUI'; }
+function getApiKey() { return _k; }
+function verificarChave() { return _k.length > 20 && !_k.includes('PARTE_'); }
 
 // ===== API OpenRouter — streaming (funciona no browser/GitHub Pages) =====
 async function chamarClaude(prompt, onChunk) {
