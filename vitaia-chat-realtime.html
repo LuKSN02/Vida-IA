@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VitaIA – Chat da Comunidade (Real-time)</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getDatabase, ref, push, onChildAdded, onValue, set, remove, serverTimestamp, query, limitToLast, off
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  import {
+    getAuth, signInAnonymously, updateProfile
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  /* ══════════════════════════════════════════════
+     🔴 SUBSTITUA OS VALORES ABAIXO PELOS DO SEU
+        PROJETO NO FIREBASE CONSOLE
+     ══════════════════════════════════════════════ */
+  const firebaseConfig = {
+    apiKey:            "SUA_API_KEY",
+    authDomain:        "SEU_PROJETO.firebaseapp.com",
+    databaseURL:       "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+    projectId:         "SEU_PROJETO",
+    storageBucket:     "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_SENDER_ID",
+    appId:             "SEU_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  const auth = getAuth(app);
+
+  let currentUser = null;
+  let friendsRef  = null;
+  let messagesRef = null;
+  let currentRoom = 'comunidade'; // sala padrão = canal geral
+
+  /* ── Auth anônima (sem cadastro) ── */
+  async function initAuth() {
+    try {
+      const cred = await signInAnonymously(auth);
+      currentUser = cred.user;
+      const savedName = localStorage.getItem('vitaia_chat_name');
+      if (savedName) {
+        await updateProfile(currentUser, { displayName: savedName });
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display  = 'flex';
+        startChat(savedName);
+      } else {
+        document.getElementById('setup-screen').style.display = 'flex';
+        document.getElementById('chat-screen').style.display  = 'none';
+        document.getElementById('firebase-status').textContent = '✅ Conectado ao Firebase!';
+        document.getElementById('firebase-status').style.color = '#00b87a';
+      }
+    } catch (err) {
+      showFirebaseError(err);
+    }
+  }
+
+  function showFirebaseError(err) {
+    const el = document.getElementById('firebase-status');
+    el.innerHTML = `⚠️ <strong>Erro Firebase:</strong> ${err.message}<br>
+      <small>Certifique-se de ter configurado o <code>firebaseConfig</code> correto no código.</small>`;
+    el.style.color = '#ef4444';
+  }
+
+  /* ── Definir nome e entrar ── */
+  window.enterChat = async function() {
+    const nameEl = document.getElementById('name-input');
+    const name = nameEl.value.trim();
+    if (!name || name.length < 2) { nameEl.style.borderColor='#ef4444'; return; }
+    nameEl.style.borderColor='';
+    localStorage.setItem('vitaia_chat_name', name);
+    await updateProfile(currentUser, { displayName: name });
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('chat-screen').style.display  = 'flex';
+    startChat(name);
+  };
+
+  /* ── Mudar nome ── */
+  window.changeName = async function() {
+    const newName = prompt('Novo nome:', currentUser.displayName || '');
+    if (!newName || newName.trim().length < 2) return;
+    localStorage.setItem('vitaia_chat_name', newName.trim());
+    await updateProfile(currentUser, { displayName: newName.trim() });
+    document.getElementById('chat-username').textContent = newName.trim();
+    // Atualiza presença
+    const presenceRef = ref(db, `presence/${currentUser.uid}`);
+    set(presenceRef, { name: newName.trim(), uid: currentUser.uid, online: true, ts: serverTimestamp() });
+    alert('Nome alterado para: ' + newName.trim());
+  };
+
+  /* ── Iniciar chat ── */
+  function startChat(name) {
+    document.getElementById('chat-username').textContent = name;
+    document.getElementById('room-label').textContent    = '# comunidade';
+
+    // Presença online
+    const presenceRef = ref(db, `presence/${currentUser.uid}`);
+    set(presenceRef, { name, uid: currentUser.uid, online: true, ts: serverTimestamp() });
+    // Remover ao sair
+    window.addEventListener('beforeunload', () => {
+      set(presenceRef, { name, uid: currentUser.uid, online: false, ts: serverTimestamp() });
+    });
+
+    // Ouvir usuários online
+    const presListRef = ref(db, 'presence');
+    onValue(presListRef, snap => {
+      const all = snap.val() || {};
+      const online = Object.values(all).filter(u => u.online);
+      renderOnlineUsers(online);
+    });
+
+    // Ouvir lista de amigos do usuário
+    friendsRef = ref(db, `friends/${currentUser.uid}`);
+    onValue(friendsRef, snap => {
+      const friends = snap.val() || {};
+      renderFriends(friends);
+    });
+
+    // Entrar na sala comunidade
+    joinRoom('comunidade');
+  }
+
+  /* ── Entrar em uma sala ── */
+  function joinRoom(roomId) {
+    if (messagesRef) off(messagesRef); // desligar listener anterior
+    currentRoom = roomId;
+    document.getElementById('messages-area').innerHTML = '';
+    const roomName = roomId === 'comunidade' ? '# comunidade' : '🔒 ' + roomId;
+    document.getElementById('room-label').textContent = roomName;
+
+    const q = query(ref(db, `rooms/${roomId}/messages`), limitToLast(50));
+    messagesRef = q;
+    onChildAdded(q, snap => {
+      const msg = snap.val();
+      appendMessage(msg, snap.key);
+    });
+  }
+  window.joinRoom = joinRoom;
+
+  /* ── Enviar mensagem ── */
+  window.sendMessage = async function() {
+    const input = document.getElementById('msg-input');
+    const text  = input.value.trim();
+    if (!text || !currentUser) return;
+    input.value = '';
+    const msgsRef = ref(db, `rooms/${currentRoom}/messages`);
+    await push(msgsRef, {
+      uid:  currentUser.uid,
+      name: currentUser.displayName || 'Anônimo',
+      text,
+      ts:   serverTimestamp()
+    });
+  };
+
+  /* ── Adicionar amigo por UID ── */
+  window.addFriendByUID = async function() {
+    const uidInput = document.getElementById('friend-uid-input');
+    const uid = uidInput.value.trim();
+    if (!uid || uid === currentUser.uid) {
+      alert('UID inválido ou é o seu próprio UID.'); return;
+    }
+    // Buscar nome do usuário via presença
+    const presSnap = await new Promise(resolve => {
+      const r = ref(db, `presence/${uid}`);
+      onValue(r, snap => resolve(snap), { onlyOnce: true });
+    });
+    const presData = presSnap.val();
+    const friendName = presData?.name || 'Usuário #' + uid.slice(-4);
+    // Salvar amigo
+    await set(ref(db, `friends/${currentUser.uid}/${uid}`), { uid, name: friendName, addedAt: serverTimestamp() });
+    uidInput.value = '';
+    alert(`✅ ${friendName} adicionado(a) como amigo!`);
+  };
+
+  /* ── Iniciar conversa privada ── */
+  window.openPrivateChat = function(friendUid, friendName) {
+    // Sala privada = ID menor + ID maior (garante unicidade)
+    const roomId = [currentUser.uid, friendUid].sort().join('_');
+    joinRoom(roomId);
+    document.getElementById('room-label').textContent = '🔒 ' + friendName;
+    // Fechar painel de amigos no mobile
+    document.getElementById('friends-panel').classList.remove('open');
+  };
+
+  /* ── Render: mensagens ── */
+  function appendMessage(msg, key) {
+    const area   = document.getElementById('messages-area');
+    const isMe   = currentUser && msg.uid === currentUser.uid;
+    const time   = msg.ts ? new Date(msg.ts).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : '--:--';
+    const el = document.createElement('div');
+    el.className = 'msg-row' + (isMe ? ' msg-mine' : '');
+    el.dataset.key = key;
+    el.innerHTML = `
+      <div class="msg-bubble">
+        ${!isMe ? `<div class="msg-author">${escHtml(msg.name)}</div>` : ''}
+        <div class="msg-text">${escHtml(msg.text)}</div>
+        <div class="msg-time">${time}</div>
+      </div>
+      ${isMe ? `<button class="msg-del" title="Apagar" onclick="deleteMessage('${key}')">✕</button>` : ''}
+    `;
+    area.appendChild(el);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  /* ── Apagar mensagem própria ── */
+  window.deleteMessage = async function(key) {
+    if (!confirm('Apagar esta mensagem?')) return;
+    await remove(ref(db, `rooms/${currentRoom}/messages/${key}`));
+    document.querySelector(`[data-key="${key}"]`)?.remove();
+  };
+
+  /* ── Copiar meu UID ── */
+  window.copyMyUID = function() {
+    if (!currentUser) return;
+    navigator.clipboard.writeText(currentUser.uid).then(() => alert('✅ Seu UID copiado!\n\n' + currentUser.uid));
+  };
+
+  /* ── Render: online ── */
+  function renderOnlineUsers(users) {
+    const el = document.getElementById('online-list');
+    el.innerHTML = users.map(u =>
+      `<div class="online-chip"><span class="online-dot"></span>${escHtml(u.name || 'Anônimo')}</div>`
+    ).join('') || '<div class="online-empty">Nenhum usuário online</div>';
+    document.getElementById('online-count').textContent = users.length + ' online';
+  }
+
+  /* ── Render: amigos ── */
+  function renderFriends(friends) {
+    const list = document.getElementById('friends-list');
+    const entries = Object.entries(friends);
+    if (!entries.length) {
+      list.innerHTML = '<div class="friends-empty">Nenhum amigo adicionado ainda.<br>Compartilhe seu UID e adicione o de alguém!</div>';
+      return;
+    }
+    list.innerHTML = entries.map(([uid, f]) => `
+      <div class="friend-item">
+        <div class="friend-avatar">${escHtml((f.name||'?')[0].toUpperCase())}</div>
+        <div class="friend-info">
+          <div class="friend-name">${escHtml(f.name || 'Usuário')}</div>
+          <div class="friend-uid">${uid.slice(0,8)}…</div>
+        </div>
+        <button class="btn-msg-friend" onclick="openPrivateChat('${uid}','${escHtml(f.name||'Usuário')}')">💬</button>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── Enter para enviar ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('msg-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    document.getElementById('name-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') enterChat();
+    });
+    document.getElementById('friend-uid-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addFriendByUID();
+    });
+    initAuth();
+  });
+</script>
+
+<style>
+:root {
+  --bg: #f5f0ff;
+  --surface: #ffffff;
+  --border: #e2d9f3;
+  --pink: #ec4899;
+  --pink-light: #fce7f3;
+  --pink-dark: #be185d;
+  --purple: #8b5cf6;
+  --purple-light: #ede9fe;
+  --teal: #00b87a;
+  --text: #1a1033;
+  --muted: #7c6e9a;
+  --msg-me: linear-gradient(135deg, #ec4899, #8b5cf6);
+  --msg-other: #ffffff;
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* ══ SETUP SCREEN ══ */
+#setup-screen {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(139,92,246,.18);
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+#setup-screen h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+#setup-screen p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+#firebase-status {
+  font-size: 12px;
+  color: var(--muted);
+  background: #f9f6ff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: left;
+  width: 100%;
+  line-height: 1.6;
+}
+#firebase-status code { background: #ede9fe; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+.setup-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; font-weight: 600; align-self: flex-start; }
+#name-input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+}
+#name-input:focus { border-color: var(--purple); }
+.btn-enter {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(139,92,246,.35);
+  transition: opacity .2s, transform .1s;
+}
+.btn-enter:hover { opacity: .9; }
+.btn-enter:active { transform: scale(.98); }
+
+/* ══ CHAT SCREEN ══ */
+#chat-screen {
+  width: 100%;
+  max-width: 900px;
+  height: 92vh;
+  max-height: 720px;
+  background: var(--surface);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(139,92,246,.18);
+  display: none;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #1a1033;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 20px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.sidebar-logo span {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255,255,255,.4);
+  font-family: 'DM Sans', sans-serif;
+}
+.my-uid-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.06);
+  border-radius: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.my-uid-row:hover { background: rgba(255,255,255,.1); }
+.my-uid-label { font-size: 11px; color: rgba(255,255,255,.5); }
+.my-uid-val { font-size: 11px; color: #ec4899; font-family: monospace; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.my-uid-copy { font-size: 10px; color: rgba(255,255,255,.3); }
+
+.sidebar-section { padding: 12px 18px 6px; }
+.sidebar-section-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,.35);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.sidebar-channel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255,255,255,.55);
+  font-size: 13px;
+  transition: background .15s, color .15s;
+}
+.sidebar-channel:hover, .sidebar-channel.active {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+.sidebar-channel.active { color: #ec4899; }
+
+/* Online users */
+#online-list { padding: 0 18px 10px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 130px; }
+.online-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+.online-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #00b87a;
+  box-shadow: 0 0 4px #00b87a;
+  flex-shrink: 0;
+}
+#online-count { font-size: 10px; color: var(--teal); margin: 0 18px 4px; }
+.online-empty { font-size: 11px; color: rgba(255,255,255,.25); padding: 4px 0; }
+
+/* Friends */
+.sidebar-friends-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 18px 4px;
+  cursor: pointer;
+}
+.sidebar-friends-toggle span { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.35); font-weight: 600; }
+.sidebar-friends-toggle button {
+  background: rgba(255,255,255,.08);
+  border: none;
+  color: #ec4899;
+  font-size: 11px;
+  border-radius: 5px;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+#friends-panel { padding: 0 18px 8px; display: none; flex-direction: column; gap: 6px; overflow-y: auto; max-height: 180px; }
+#friends-panel.open { display: flex; }
+.friend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.friend-item:hover { background: rgba(255,255,255,.07); }
+.friend-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.friend-info { flex: 1; overflow: hidden; }
+.friend-name { font-size: 12px; color: rgba(255,255,255,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.friend-uid { font-size: 10px; color: rgba(255,255,255,.3); font-family: monospace; }
+.btn-msg-friend {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: .6;
+  transition: opacity .15s;
+}
+.btn-msg-friend:hover { opacity: 1; }
+.friends-empty { font-size: 11px; color: rgba(255,255,255,.25); line-height: 1.6; }
+
+/* Add friend input */
+.add-friend-row { padding: 6px 18px 12px; display: none; gap: 6px; }
+.add-friend-row.open { display: flex; }
+.add-friend-row input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-size: 11px;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.add-friend-row input::placeholder { color: rgba(255,255,255,.25); }
+.add-friend-row input:focus { border-color: #ec4899; }
+.add-friend-row button {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  border: none;
+  color: #fff;
+  font-size: 11px;
+  border-radius: 7px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Bottom profile */
+.sidebar-profile {
+  margin-top: auto;
+  padding: 12px 18px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.profile-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.profile-name { font-size: 13px; color: rgba(255,255,255,.8); font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-change-name {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: rgba(255,255,255,.3);
+  transition: color .15s;
+}
+.btn-change-name:hover { color: #ec4899; }
+
+/* ── MAIN CHAT ── */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+.chat-topbar {
+  padding: 14px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#room-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.room-desc { font-size: 12px; color: var(--muted); }
+.topbar-spacer { flex: 1; }
+.friends-toggle-btn {
+  display: none;
+  background: var(--pink-light);
+  border: none;
+  color: var(--pink);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Messages area */
+#messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scroll-behavior: smooth;
+}
+#messages-area::-webkit-scrollbar { width: 4px; }
+#messages-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.msg-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  max-width: 75%;
+  align-self: flex-start;
+}
+.msg-row.msg-mine {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.msg-bubble {
+  background: var(--msg-other);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  position: relative;
+}
+.msg-mine .msg-bubble {
+  background: var(--msg-me);
+  border: none;
+  color: #fff;
+  border-radius: 16px 16px 4px 16px;
+  box-shadow: 0 4px 14px rgba(139,92,246,.3);
+}
+.msg-author { font-size: 11px; font-weight: 700; color: var(--purple); margin-bottom: 3px; font-family: 'Syne', sans-serif; }
+.msg-text { font-size: 14px; line-height: 1.5; word-break: break-word; }
+.msg-mine .msg-text { color: #fff; }
+.msg-time { font-size: 10px; color: var(--muted); margin-top: 4px; text-align: right; }
+.msg-mine .msg-time { color: rgba(255,255,255,.6); }
+.msg-del {
+  background: none;
+  border: none;
+  font-size: 10px;
+  color: #ef4444;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .15s;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.msg-row:hover .msg-del { opacity: 1; }
+
+/* Input row */
+.chat-input-row {
+  padding: 14px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+#msg-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  resize: none;
+  max-height: 100px;
+  transition: border-color .2s;
+}
+#msg-input:focus { border-color: var(--purple); }
+.btn-send {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(139,92,246,.3);
+  transition: opacity .2s, transform .1s;
+  flex-shrink: 0;
+}
+.btn-send:hover { opacity: .9; }
+.btn-send:active { transform: scale(.97); }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 620px) {
+  body { padding: 0; align-items: stretch; }
+  #chat-screen { max-height: 100vh; height: 100dvh; border-radius: 0; }
+  .sidebar { display: none; position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; width: 80vw; }
+  .sidebar.open { display: flex; }
+  .friends-toggle-btn { display: flex; }
+  #setup-screen { border-radius: 20px; margin: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SETUP SCREEN ══ -->
+<div id="setup-screen" style="display:none; flex-direction:column; align-items:center; gap:16px;">
+  <div style="font-size:36px">💬</div>
+  <h1>Chat da Comunidade</h1>
+  <p>Entre com seu nome para participar do chat em tempo real com outros usuários VitaIA.</p>
+  <div id="firebase-status">⏳ Conectando ao Firebase…</div>
+  <label class="setup-label">Seu nome de exibição</label>
+  <input id="name-input" type="text" placeholder="Ex.: Ana M." maxlength="30" autocomplete="off" spellcheck="false">
+  <button class="btn-enter" onclick="enterChat()">ENTRAR NO CHAT</button>
+  <p style="font-size:11px; color:var(--muted); line-height:1.8; max-width:360px;">
+    <strong>⚠️ Para funcionar, você precisa:</strong><br>
+    1. Criar um projeto no <a href="https://console.firebase.google.com" target="_blank" style="color:var(--purple)">Firebase Console</a><br>
+    2. Ativar <strong>Realtime Database</strong> e <strong>Anonymous Auth</strong><br>
+    3. Substituir o <code style="background:#ede9fe;padding:1px 4px;border-radius:4px">firebaseConfig</code> no código
+  </p>
+</div>
+
+<!-- ══ CHAT SCREEN ══ -->
+<div id="chat-screen">
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        💬 VitaIA Chat <span>beta</span>
+      </div>
+      <div class="my-uid-row" onclick="copyMyUID()" title="Clique para copiar seu UID">
+        <div class="my-uid-label">Meu UID:</div>
+        <div class="my-uid-val" id="my-uid-display">carregando…</div>
+        <div class="my-uid-copy">📋</div>
+      </div>
+    </div>
+
+    <!-- Canais -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Canais</div>
+      <div class="sidebar-channel active" onclick="joinRoom('comunidade'); document.querySelectorAll('.sidebar-channel').forEach(c=>c.classList.remove('active')); this.classList.add('active');">
+        # comunidade
+      </div>
+      <div class="sidebar-channel" onclick="joinRoom('saude'); document.querySelectorAll('.sidebar-channel').forEach(c=>c.classList.remove('active')); this.classList.add('active');">
+        # saúde-e-bem-estar
+      </div>
+      <div class="sidebar-channel" onclick="joinRoom('nutricao'); document.querySelectorAll('.sidebar-channel').forEach(c=>c.classList.remove('active')); this.classList.add('active');">
+        # nutrição
+      </div>
+    </div>
+
+    <!-- Online -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Online agora</div>
+    </div>
+    <div id="online-count" style="font-size:10px;color:var(--teal);margin:0 18px 4px;">0 online</div>
+    <div id="online-list"></div>
+
+    <!-- Amigos -->
+    <div class="sidebar-friends-toggle">
+      <span>Amigos</span>
+      <button onclick="toggleFriendsPanel()">+ ADICIONAR</button>
+    </div>
+    <div id="friends-panel" class="open">
+      <div id="friends-list"></div>
+    </div>
+    <div class="add-friend-row" id="add-friend-row">
+      <input id="friend-uid-input" placeholder="Cole o UID do amigo…" spellcheck="false">
+      <button onclick="addFriendByUID()">ADICIONAR</button>
+    </div>
+
+    <!-- Profile -->
+    <div class="sidebar-profile">
+      <div class="profile-avatar" id="profile-avatar">?</div>
+      <div class="profile-name" id="chat-username">…</div>
+      <button class="btn-change-name" onclick="changeName()" title="Mudar nome">✏️</button>
+    </div>
+
+  </div>
+
+  <!-- Main chat -->
+  <div class="chat-main">
+    <div class="chat-topbar">
+      <button class="friends-toggle-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div>
+        <div id="room-label"># comunidade</div>
+        <div class="room-desc">Chat em tempo real · Firebase</div>
+      </div>
+      <div class="topbar-spacer"></div>
+    </div>
+
+    <div id="messages-area">
+      <div style="text-align:center;color:var(--muted);font-size:13px;padding:30px 0;">
+        Bem-vindo(a) ao chat da comunidade VitaIA! 👋
+      </div>
+    </div>
+
+    <div class="chat-input-row">
+      <textarea id="msg-input" placeholder="Mensagem para a comunidade…" rows="1"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button class="btn-send" onclick="sendMessage()">ENVIAR</button>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  // Após auth inicializar, mostrar UID no sidebar
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        document.getElementById('my-uid-display').textContent = user.uid.slice(0,12) + '…';
+        const name = user.displayName || '?';
+        document.getElementById('profile-avatar').textContent = name[0].toUpperCase();
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.getElementById('chat-screen'), { attributes: true, childList: true, subtree: true });
+  });
+
+  // Observar mudanças no nome
+  const usernameEl = document.getElementById('chat-username');
+  const avatarEl   = document.getElementById('profile-avatar');
+  const nameObserver = new MutationObserver(() => {
+    const name = usernameEl.textContent;
+    if (name && name !== '…') avatarEl.textContent = name[0].toUpperCase();
+  });
+  nameObserver.observe(usernameEl, { childList: true, characterData: true, subtree: true });
+</script>
+
+<script>
+  // toggleFriendsPanel precisa ser global
+  function toggleFriendsPanel() {
+    document.getElementById('friends-panel').classList.toggle('open');
+    document.getElementById('add-friend-row').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
