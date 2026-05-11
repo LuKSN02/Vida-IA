@@ -725,7 +725,7 @@ body.dark-mode .btn-exit-app:hover {
   .tele-prof-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
   .tele-prof-spec { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .tele-prof-rating { font-size: 12px; color: #f59e0b; margin-top: 2px; }
-  .tele-prof-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+  .tele-prof-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; max-width: 160px; }
   .btn-tele-action { width: 36px; height: 36px; border-radius: 10px; border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: .2s; }
   .btn-chat { background: #e0f2fe; }
   .btn-chat:hover { background: #bae6fd; }
@@ -1517,12 +1517,6 @@ body.dark-mode .btn-exit-app:hover {
           </div>
         </div>
 
-        <div class="tele-section-title">Tipo de Atendimento</div>
-        <div class="tele-types">
-          <div class="tele-type-card" onclick="selectTeleType('chat')"><div class="tele-type-icon">💬</div><div class="tele-type-name">Chat</div><div class="tele-type-desc">Conversa em tempo real ou assíncrona. Envio de fotos e relatórios.</div></div>
-          <div class="tele-type-card" onclick="selectTeleType('video')"><div class="tele-type-icon">📹</div><div class="tele-type-name">Vídeo</div><div class="tele-type-desc">Consulta completa ao vivo com avaliação personalizada.</div></div>
-        </div>
-
         <div class="tele-section-title">Profissionais Disponíveis</div>
         <div class="tele-prof-list">
           <div class="tele-prof-item">
@@ -1530,7 +1524,8 @@ body.dark-mode .btn-exit-app:hover {
             <div style="flex:1"><div class="tele-prof-name">Dra. Ana Ribeiro</div><div class="tele-prof-spec">Nutricionista · CRN 12345</div><div class="tele-prof-rating">★★★★★ 4.9</div></div>
             <div class="tele-prof-actions">
               <button class="btn-tele-action btn-chat" onclick="openTeleChat('Dra. Ana Ribeiro','Nutricionista')">💬 Chat</button>
-              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dra. Ana Ribeiro')">📅 Agendar</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="openTeleVideo('Dra. Ana Ribeiro')">📹 Vídeo</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dra. Ana Ribeiro')">📅 Agendar</button>
             </div>
           </div>
           <div class="tele-prof-item">
@@ -1538,7 +1533,8 @@ body.dark-mode .btn-exit-app:hover {
             <div style="flex:1"><div class="tele-prof-name">Carlos Mendes</div><div class="tele-prof-spec">Personal Trainer · CREF 98765</div><div class="tele-prof-rating">★★★★☆ 4.7</div></div>
             <div class="tele-prof-actions">
               <button class="btn-tele-action btn-chat" onclick="openTeleChat('Carlos Mendes','Personal Trainer')">💬 Chat</button>
-              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Carlos Mendes')">📅 Agendar</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="openTeleVideo('Carlos Mendes')">📹 Vídeo</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Carlos Mendes')">📅 Agendar</button>
             </div>
           </div>
           <div class="tele-prof-item">
@@ -1546,7 +1542,8 @@ body.dark-mode .btn-exit-app:hover {
             <div style="flex:1"><div class="tele-prof-name">Dra. Mariana Costa</div><div class="tele-prof-spec">Clínica Geral · CRM 54321</div><div class="tele-prof-rating">★★★★★ 5.0</div></div>
             <div class="tele-prof-actions">
               <button class="btn-tele-action btn-chat" onclick="openTeleChat('Dra. Mariana Costa','Médica')">💬 Chat</button>
-              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dra. Mariana Costa')">📅 Agendar</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="openTeleVideo('Dra. Mariana Costa')">📹 Vídeo</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dra. Mariana Costa')">📅 Agendar</button>
             </div>
           </div>
           <div class="tele-prof-item">
@@ -1554,7 +1551,8 @@ body.dark-mode .btn-exit-app:hover {
             <div style="flex:1"><div class="tele-prof-name">Dr. Ricardo Alves</div><div class="tele-prof-spec">Psicólogo · CRP 67890</div><div class="tele-prof-rating">★★★★★ 4.8</div></div>
             <div class="tele-prof-actions">
               <button class="btn-tele-action btn-chat" onclick="openTeleChat('Dr. Ricardo Alves','Psicólogo')">💬 Chat</button>
-              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dr. Ricardo Alves')">📅 Agendar</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="openTeleVideo('Dr. Ricardo Alves')">📹 Vídeo</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dr. Ricardo Alves')">📅 Agendar</button>
             </div>
           </div>
         </div>
@@ -3452,7 +3450,13 @@ function updateTeleConsultBadge() {
 function selectTeleType(type) {
   const list = document.querySelector('.tele-prof-list');
   if (list) { list.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-  showToast(type==='chat'?'💬 Chat':'📹 Vídeo', 'Escolha um profissional abaixo para iniciar.', type==='chat'?'💬':'📹', 3000);
+}
+function openTeleVideo(profName) {
+  showToast('📹 Vídeo Chamada', 'Iniciando videochamada com ' + profName + '...', '📹', 3000);
+  setTimeout(() => {
+    const url = 'https://meet.jit.si/VitaIA-' + profName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+    window.open(url, '_blank', 'width=900,height=700');
+  }, 1000);
 }
 function openTeleChat(profName, spec) {
   if (state.teleConsultToday >= 1) {
