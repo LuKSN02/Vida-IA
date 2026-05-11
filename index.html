@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VitaIA – IA de Qualidade de Vida</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <!-- Firebase SDKs (Comunidade Real-time) -->
 <script type="module">
@@ -257,36 +258,6 @@
     --faq-border: #e8f4ff;
   }
   body.dark-mode {
-    --field-bg: #1c2332; --field-border: #2a3547;
-    --hydra-bg: linear-gradient(135deg, #0d2035, #0a1a2a); --hydra-border: #1a3a5c;
-    --hydra-text: #93c5fd; --hydra-muted: #8b949e; --hydra-accent: #38bdf8;
-    --hydra-btn-bg: #0d2035; --hydra-btn-border: #1a3a5c; --hydra-goal-bg: rgba(0,0,0,.3);
-    --water-alert-bg: #0d2035; --water-alert-color: #93c5fd;
-    --nutr-bg: linear-gradient(135deg, #0d1f18, #0a1a15); --nutr-border: #1a4a2e;
-    --protein-card-bg: linear-gradient(135deg, #2a1520, #2a1020); --protein-card-border: #6b2a3a;
-    --tele-secure-bg: #0d1f18;
-    --badge-video-bg: #0d2a1a; --badge-video-color: #6ee7b7;
-    --badge-chat-bg: #0d1a2e; --badge-chat-color: #93c5fd;
-    --limit-badge-bg: #2a1f08; --limit-badge-border: #4a3010; --limit-badge-color: #fcd34d;
-    --social-bg: #161b22; --social-border: #3d1a2e; --social-accent: #f472b6;
-    --plan-section-bg: #161b22; --plan-item-bg: #1c2332;
-    --stat-box-bg: #161b22;
-    --contact-card-bg: #1c2332; --contact-card-border: #2a3547;
-    --profile-item-bg: #1c2332; --profile-item-hover: #2a3547;
-    --ai-food-result-bg: linear-gradient(135deg, #1a1a2e, #0d1a2e);
-    --chat-bubble-ai-bg: #1c2332;
-    --chat-input-bg: #1c2332;
-    --auth-tabs-bg: #1c2332;
-    --bottom-nav-bg: #161b22;
-    --img-upload-bg: #1c2332; --img-upload-hover: #2a3547;
-    --food-log-item-bg: #1c2332; --food-log-item-border: #2a3547;
-    --food-suggestions-bg: #1c2332;
-    --exercise-btn-bg: #1c2332;
-    --twofa-digit-bg: #1c2332;
-    --saved-user-chip-bg: #1c2332;
-    --faq-border: #2a3547;
-  }
-  body.dark-mode {
     --bg: #0d1117; --surface: #161b22; --surface2: #1c2332; --border: #2a3547;
     --text: #e6edf3; --muted: #8b949e; --card-bg: #161b22;
     --cyan: #58a6ff; --cyan-dark: #79c0ff;
@@ -306,7 +277,7 @@
     --badge-video-bg: #0d2a1a; --badge-video-color: #6ee7b7;
     --badge-chat-bg: #0d1a2e; --badge-chat-color: #93c5fd;
     --limit-badge-bg: #2a1f08; --limit-badge-border: #4a3010; --limit-badge-color: #fcd34d;
-    --social-bg: #161b22; --social-border: #3d1a2e; --social-accent: #f472b6;
+    --social-bg: #161b22; --social-border: #2a3547; --social-accent: #58a6ff;
     --plan-section-bg: #161b22; --plan-item-bg: #1c2332;
     --stat-box-bg: #161b22;
     --contact-card-bg: #1c2332; --contact-card-border: #2a3547;
@@ -340,9 +311,13 @@
   body.dark-mode .food-log-item { background: #1c2332; border-color: #2a3547; }
   body.dark-mode .exercise-saved-item { background: #1a2e24; border-color: #2a4a35; }
   body.dark-mode #comm-msg-input { background: #1c2332; border-color: #2a3547; color: var(--text); }
-  body.dark-mode .comm-msg-bubble { background: #1c2332; border-color: #2a3547; }
+  body.dark-mode .comm-msg-bubble { background: #1c2332; border-color: #2a3547; color: var(--text); }
   body.dark-mode .comm-chat-main { background: #0d1117; }
   body.dark-mode .comm-topbar, body.dark-mode .comm-input-row { background: #161b22; border-color: #2a3547; }
+  body.dark-mode .comm-sidebar { background: #161b22; border-color: #2a3547; }
+  body.dark-mode .comm-setup-screen { background: #161b22; }
+  body.dark-mode .comm-online-chip { background: #1c2332; color: var(--text); }
+  body.dark-mode .comm-friend-item { background: #1c2332; border-color: #2a3547; color: var(--text); }
   body.dark-mode .contact-card { background: #1c2332; border-color: #2a3547; }
   body.dark-mode .social-login-row .btn-social { background: #1c2332; border-color: #2a3547; color: var(--text); }
   body.dark-mode .saved-user-chip { background: #1c2332; border-color: #2a3547; color: var(--cyan); }
@@ -414,6 +389,54 @@
   .social-login-row { display: flex; gap: 10px; margin-bottom: 4px; }
   .btn-social { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 10px; border: 1.5px solid #e0ecff; border-radius: 10px; background: var(--surface); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; transition: .2s; }
   .btn-social:hover { background: var(--surface2); border-color: var(--cyan); }
+  /* Botão de saída polido */
+.btn-exit-app {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 13px 18px;
+  background: linear-gradient(135deg, #fff0f0, #ffe4e4);
+  border: 1.5px solid #fca5a5; border-radius: 14px;
+  color: #dc2626; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 14px; cursor: pointer;
+  transition: all .2s; margin-top: 8px;
+  box-shadow: 0 2px 10px rgba(220,38,38,.1);
+}
+.btn-exit-app:hover {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border-color: #f87171;
+  box-shadow: 0 4px 16px rgba(220,38,38,.2);
+  transform: translateY(-1px);
+}
+body.dark-mode .btn-exit-app {
+  background: linear-gradient(135deg, #2a1515, #3a1a1a);
+  border-color: #7f1d1d; color: #fca5a5;
+}
+body.dark-mode .btn-exit-app:hover {
+  background: linear-gradient(135deg, #3a1a1a, #4a2020);
+}
+
+/* Customização de perfil */
+.profile-custom-section { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+.profile-custom-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; font-weight: 600; margin-bottom: 10px; }
+.profile-color-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.profile-color-dot {
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  border: 2.5px solid transparent; transition: all .2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+.profile-color-dot.selected, .profile-color-dot:hover { border-color: var(--text); transform: scale(1.15); }
+.profile-name-edit-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.profile-name-edit-input {
+  flex: 1; padding: 9px 12px; background: var(--field-bg);
+  border: 1.5px solid var(--field-border); border-radius: 10px;
+  color: var(--text); font-size: 13px; outline: none;
+  font-family: 'Syne', sans-serif;
+}
+.profile-name-edit-input:focus { border-color: var(--cyan); }
+.btn-save-profile-name {
+  padding: 9px 16px; background: linear-gradient(135deg, #00b87a, #0ea5e9);
+  border: none; border-radius: 10px; color: #fff;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer;
+}
   .btn-social-icon { font-size: 17px; }
 
   /* Forgot password link */
@@ -758,7 +781,7 @@
   .profile-name-display { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; text-align: center; color: var(--text); margin-bottom: 4px; }
   .profile-email-display { font-size: 13px; text-align: center; color: var(--muted); margin-bottom: 20px; }
   .profile-settings-list { display: flex; flex-direction: column; gap: 8px; }
-  .profile-settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--profile-item-bg); border-radius: 12px; font-size: 14px; cursor: pointer; transition: background .2s; }
+  .profile-settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--profile-item-bg); border-radius: 12px; font-size: 14px; transition: background .2s; }
   .profile-settings-item:hover { background: var(--profile-item-hover); }
   .profile-settings-label { display: flex; align-items: center; gap: 10px; color: var(--text); }
   .toggle-switch { position: relative; width: 44px; height: 24px; }
@@ -789,6 +812,11 @@
   .social-input { flex: 1; padding: 10px 14px; background: var(--social-bg); border: 1.5px solid var(--social-border); border-radius: 10px; font-size: 13px; color: var(--text); outline: none; }
   .social-input:focus { border-color: #ec4899; }
   .social-send { padding: 10px 14px; background: linear-gradient(135deg, #ec4899, #be185d); border: none; border-radius: 10px; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; }
+  body.dark-mode .social-card { background: #161b22; border-color: #2a3547; }
+  body.dark-mode .social-chat-area { background: #0d1117; }
+  body.dark-mode .social-msg { background: #1c2332; border-color: #2a3547; }
+  body.dark-mode .social-msg-user { color: #58a6ff; }
+  body.dark-mode .social-input { background: #1c2332; border-color: #2a3547; color: var(--text); }
 
   /* ══ COMUNIDADE FIREBASE CHAT ══ */
   #page-comunidade { padding: 0 !important; display: none; flex-direction: column; height: calc(100vh - 80px); }
@@ -1340,7 +1368,7 @@
           </div>
         </div>
 
-        <!-- Nutrição card (adição de alimentos) -->
+        <!-- Nutrição card (adição de alimentos via IA) -->
         <div class="nutrition-card">
           <div class="nutrition-title">🥗 Alimentação</div>
           <div class="nutrition-grid">
@@ -1363,28 +1391,19 @@
               <div class="nutr-bar-wrap"><div class="nutr-bar nutr-bar-fat" id="nutr-fat-bar" style="width:0%"></div></div>
             </div>
           </div>
-          <div class="food-add-row">
-            <div class="food-search-wrap">
-              <input class="food-search-input" id="food-search" placeholder="Buscar alimento..." oninput="searchFood()" autocomplete="off">
-              <div class="food-suggestions" id="food-suggestions"></div>
-            </div>
-            <button class="btn-add-food" onclick="addSelectedFood()">+ ADICIONAR</button>
-          </div>
-          <div class="food-log-area">
-            <div class="food-log-title">Alimentos registrados</div>
-            <div class="food-log-list" id="food-log-list"><div style="font-size:12px;color:var(--muted);text-align:center;padding:12px;">Nenhum alimento registrado ainda</div></div>
-          </div>
 
           <!-- IA para calcular alimentos livres -->
           <div class="ai-food-section">
             <div class="ai-food-label">🤖 Calcular com IA — Digite qualquer alimento</div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Escreva um alimento que nao esta na lista e a IA vai calcular os macros automaticamente!</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Escreva um alimento e a IA vai calcular os macros automaticamente!</div>
             <div class="ai-food-row">
               <input class="ai-food-input" id="ai-food-input" placeholder="Ex: 150g de frango grelhado, 1 fatia de pizza..." onkeydown="if(event.key==='Enter')aiFoodAnalyze()">
               <button class="ai-food-btn" onclick="aiFoodAnalyze()" id="ai-food-btn">IA CALCULAR</button>
             </div>
             <div class="ai-food-result" id="ai-food-result"></div>
           </div>
+          <!-- Hidden elements needed by JS (search/log on home tab) -->
+          <div style="display:none"><input id="food-search"><div id="food-suggestions"></div><div id="food-log-list"></div></div>
         </div>
 
         <div class="card">
@@ -1508,18 +1527,35 @@
         <div class="tele-prof-list">
           <div class="tele-prof-item">
             <div class="tele-prof-avatar">🥗</div>
-            <div><div class="tele-prof-name">Dra. Ana Ribeiro</div><div class="tele-prof-spec">Nutricionista · CRN 12345</div><div class="tele-prof-rating">★★★★★ 4.9</div></div>
-            <div class="tele-prof-actions"><button class="btn-tele-action btn-chat" onclick="openTeleChat('Dra. Ana Ribeiro','Nutricionista')">💬</button><button class="btn-tele-action btn-video" onclick="scheduleTele('Dra. Ana Ribeiro')">📹</button></div>
+            <div style="flex:1"><div class="tele-prof-name">Dra. Ana Ribeiro</div><div class="tele-prof-spec">Nutricionista · CRN 12345</div><div class="tele-prof-rating">★★★★★ 4.9</div></div>
+            <div class="tele-prof-actions">
+              <button class="btn-tele-action btn-chat" onclick="openTeleChat('Dra. Ana Ribeiro','Nutricionista')">💬 Chat</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dra. Ana Ribeiro')">📅 Agendar</button>
+            </div>
           </div>
           <div class="tele-prof-item">
             <div class="tele-prof-avatar">💪</div>
-            <div><div class="tele-prof-name">Carlos Mendes</div><div class="tele-prof-spec">Personal Trainer · CREF 98765</div><div class="tele-prof-rating">★★★★☆ 4.7</div></div>
-            <div class="tele-prof-actions"><button class="btn-tele-action btn-chat" onclick="openTeleChat('Carlos Mendes','Personal Trainer')">💬</button><button class="btn-tele-action btn-video" onclick="scheduleTele('Carlos Mendes')">📹</button></div>
+            <div style="flex:1"><div class="tele-prof-name">Carlos Mendes</div><div class="tele-prof-spec">Personal Trainer · CREF 98765</div><div class="tele-prof-rating">★★★★☆ 4.7</div></div>
+            <div class="tele-prof-actions">
+              <button class="btn-tele-action btn-chat" onclick="openTeleChat('Carlos Mendes','Personal Trainer')">💬 Chat</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Carlos Mendes')">📅 Agendar</button>
+            </div>
           </div>
           <div class="tele-prof-item">
             <div class="tele-prof-avatar">🩺</div>
-            <div><div class="tele-prof-name">Dra. Mariana Costa</div><div class="tele-prof-spec">Clínica Geral · CRM 54321</div><div class="tele-prof-rating">★★★★★ 5.0</div></div>
-            <div class="tele-prof-actions"><button class="btn-tele-action btn-chat" onclick="openTeleChat('Dra. Mariana Costa','Médica')">💬</button><button class="btn-tele-action btn-video" onclick="scheduleTele('Dra. Mariana Costa')">📹</button></div>
+            <div style="flex:1"><div class="tele-prof-name">Dra. Mariana Costa</div><div class="tele-prof-spec">Clínica Geral · CRM 54321</div><div class="tele-prof-rating">★★★★★ 5.0</div></div>
+            <div class="tele-prof-actions">
+              <button class="btn-tele-action btn-chat" onclick="openTeleChat('Dra. Mariana Costa','Médica')">💬 Chat</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dra. Mariana Costa')">📅 Agendar</button>
+            </div>
+          </div>
+          <div class="tele-prof-item">
+            <div class="tele-prof-avatar">🧠</div>
+            <div style="flex:1"><div class="tele-prof-name">Dr. Ricardo Alves</div><div class="tele-prof-spec">Psicólogo · CRP 67890</div><div class="tele-prof-rating">★★★★★ 4.8</div></div>
+            <div class="tele-prof-actions">
+              <button class="btn-tele-action btn-chat" onclick="openTeleChat('Dr. Ricardo Alves','Psicólogo')">💬 Chat</button>
+              <button class="btn-tele-action" style="background:linear-gradient(135deg,#8b5cf6,#0ea5e9);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer" onclick="scheduleTele('Dr. Ricardo Alves')">📅 Agendar</button>
+            </div>
           </div>
         </div>
 
@@ -1610,10 +1646,16 @@
             </div>
             <div style="padding:14px 0 4px">
               <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">Horario de dormir preferido</div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <input type="time" id="sleep-time-pref" value="22:30" onchange="saveSleepTimePref()"
-                  style="padding:9px 12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;flex:1">
-                <button onclick="testSleepReminder()" style="padding:9px 14px;background:linear-gradient(135deg,#8b5cf6,#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:12px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap">TESTAR</button>
+              <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:16px;text-align:center">
+                <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">Selecione o horário</div>
+                <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:14px">
+                  <select id="sleep-hour-sel" onchange="updateSleepTimePref()" style="padding:10px 14px;background:var(--field-bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:20px;font-family:'Syne',sans-serif;font-weight:700;outline:none;width:72px;text-align:center"></select>
+                  <span style="font-size:24px;font-weight:800;color:var(--cyan)">:</span>
+                  <select id="sleep-min-sel" onchange="updateSleepTimePref()" style="padding:10px 14px;background:var(--field-bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:20px;font-family:'Syne',sans-serif;font-weight:700;outline:none;width:72px;text-align:center"></select>
+                </div>
+                <div id="sleep-time-display" style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--cyan);margin-bottom:12px">22:30</div>
+                <button onclick="testSleepReminder()" style="padding:10px 20px;background:linear-gradient(135deg,#8b5cf6,#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:13px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">🌙 TESTAR LEMBRETE</button>
+                <input type="hidden" id="sleep-time-pref" value="22:30">
               </div>
             </div>
           </div>
@@ -1637,14 +1679,45 @@
       <div class="nav-item" onclick="goTo('labs',this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>Labs
       </div>
-      <div class="nav-item" onclick="goTo('tele',this)">
+      <div class="nav-item" onclick="openProfessionalPicker()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 .95h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>TeleSaúde
       </div>
     </nav>
   </div>
 </div>
 
-<!-- ══ MODAL: AJUDA IMEDIATA ══ -->
+<!-- ══ MODAL: PROFISSIONAL PICKER ══ -->
+<div class="modal-overlay" id="modal-prof-picker">
+  <div class="modal-sheet" style="position:relative">
+    <button class="modal-close" onclick="closeModal('modal-prof-picker')">×</button>
+    <div class="modal-handle"></div>
+    <div class="modal-title">💬 Escolha um Profissional</div>
+    <div class="modal-sub">Selecione com quem deseja conversar</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="closeModal('modal-prof-picker');openTeleChat('Dra. Ana Ribeiro','Nutricionista')">
+        <div style="font-size:32px">🥗</div>
+        <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text)">Dra. Ana Ribeiro</div><div style="font-size:12px;color:var(--muted)">Nutricionista · CRN 12345</div><div style="font-size:11px;color:#fbbf24">★★★★★ 4.9</div></div>
+        <div style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border-radius:10px;padding:8px 14px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">💬 Chat</div>
+      </div>
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="closeModal('modal-prof-picker');openTeleChat('Carlos Mendes','Personal Trainer')">
+        <div style="font-size:32px">💪</div>
+        <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text)">Carlos Mendes</div><div style="font-size:12px;color:var(--muted)">Personal Trainer · CREF 98765</div><div style="font-size:11px;color:#fbbf24">★★★★☆ 4.7</div></div>
+        <div style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border-radius:10px;padding:8px 14px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">💬 Chat</div>
+      </div>
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="closeModal('modal-prof-picker');openTeleChat('Dra. Mariana Costa','Médica')">
+        <div style="font-size:32px">🩺</div>
+        <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text)">Dra. Mariana Costa</div><div style="font-size:12px;color:var(--muted)">Clínica Geral · CRM 54321</div><div style="font-size:11px;color:#fbbf24">★★★★★ 5.0</div></div>
+        <div style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border-radius:10px;padding:8px 14px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">💬 Chat</div>
+      </div>
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="closeModal('modal-prof-picker');openTeleChat('Dr. Ricardo Alves','Psicólogo')">
+        <div style="font-size:32px">🧠</div>
+        <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text)">Dr. Ricardo Alves</div><div style="font-size:12px;color:var(--muted)">Psicólogo · CRP 67890</div><div style="font-size:11px;color:#fbbf24">★★★★★ 4.8</div></div>
+        <div style="background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border-radius:10px;padding:8px 14px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">💬 Chat</div>
+      </div>
+      <button class="btn-primary" style="margin-top:4px" onclick="closeModal('modal-prof-picker');goToTele()">Ver todos os profissionais</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="modal-ajuda">
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeModal('modal-ajuda')">×</button>
@@ -1706,10 +1779,10 @@
     <button class="modal-close" onclick="closeModal('modal-profile')">×</button>
     <div class="modal-handle"></div>
     <div class="modal-title">Meu Perfil</div>
-    <!-- Upload de foto -->
-    <div class="profile-avatar-upload" id="profile-avatar-display">
-      <input type="file" accept="image/*" onchange="uploadProfilePhoto(event)">
+    <!-- Avatar clicável para trocar foto -->
+    <div class="profile-avatar-upload" id="profile-avatar-display" onclick="openPhotoCropModal()" style="cursor:pointer" title="Trocar foto de perfil">
       <span id="profile-avatar-initials" style="font-family:'Syne',sans-serif;font-weight:800;font-size:28px;pointer-events:none"></span>
+      <div style="position:absolute;bottom:0;right:0;width:26px;height:26px;background:#0ea5e9;border-radius:50%;border:2.5px solid var(--surface);display:flex;align-items:center;justify-content:center;font-size:12px;pointer-events:none">📷</div>
     </div>
     <div class="profile-name-display" id="profile-name-display"></div>
     <div class="profile-email-display" id="profile-email-display"></div>
@@ -1722,11 +1795,30 @@
         <div class="profile-settings-label">🌙 Modo escuro</div>
         <label class="toggle-switch"><input type="checkbox" id="setting-dark"><span class="toggle-slider"></span></label>
       </div>
-      <div class="profile-settings-item" onclick="closeModal('modal-profile');switchTab('login')" style="cursor:pointer">
-        <div class="profile-settings-label" style="color:var(--red)">🚪 Sair da conta</div>
-        <span style="color:var(--muted)">›</span>
+    </div>
+
+    <!-- Customização de Perfil -->
+    <div class="profile-custom-section">
+      <div class="profile-custom-title">✏️ Personalizar nome</div>
+      <div class="profile-name-edit-row">
+        <input type="text" class="profile-name-edit-input" id="profile-name-edit-input" placeholder="Novo nome...">
+        <button class="btn-save-profile-name" onclick="saveProfileName()">SALVAR</button>
+      </div>
+      <div class="profile-custom-title">🎨 Cor do avatar</div>
+      <div class="profile-color-row" id="profile-color-row">
+        <div class="profile-color-dot selected" style="background:linear-gradient(135deg,#667eea,#764ba2)" data-color="linear-gradient(135deg,#667eea,#764ba2)" onclick="selectAvatarColor(this)"></div>
+        <div class="profile-color-dot" style="background:linear-gradient(135deg,#00b87a,#0ea5e9)" data-color="linear-gradient(135deg,#00b87a,#0ea5e9)" onclick="selectAvatarColor(this)"></div>
+        <div class="profile-color-dot" style="background:linear-gradient(135deg,#f97316,#ec4899)" data-color="linear-gradient(135deg,#f97316,#ec4899)" onclick="selectAvatarColor(this)"></div>
+        <div class="profile-color-dot" style="background:linear-gradient(135deg,#7c3aed,#f64f59)" data-color="linear-gradient(135deg,#7c3aed,#f64f59)" onclick="selectAvatarColor(this)"></div>
+        <div class="profile-color-dot" style="background:linear-gradient(135deg,#0ea5e9,#00b4d8)" data-color="linear-gradient(135deg,#0ea5e9,#00b4d8)" onclick="selectAvatarColor(this)"></div>
+        <div class="profile-color-dot" style="background:linear-gradient(135deg,#ef4444,#f97316)" data-color="linear-gradient(135deg,#ef4444,#f97316)" onclick="selectAvatarColor(this)"></div>
       </div>
     </div>
+
+    <!-- Botão de saída polido -->
+    <button class="btn-exit-app" onclick="closeModal('modal-profile');doLogout()">
+      🚪 <span>Sair da conta</span>
+    </button>
 
     <!-- API integrada no código fonte -->
 
@@ -1823,7 +1915,7 @@ const moodSubs   = ['','Vai ficar tudo bem, estou aqui.','Estou aqui com você.'
 const moodCtx    = ['','Percebi que você está se sentindo mal. Como posso te ajudar agora?','Percebi que seu humor está instável. Como posso ajudar?','Oi! Tudo neutro por aí. Tem algo que posso fazer por você?','Que bom que você está bem! Posso potencializar isso?','Incrível que você está ótimo! Como posso tornar seu dia ainda melhor?'];
 
 const state = {
-  name:'', email:'', hydra:0, hydraGoal: 2,
+  name:'', email:'', hydra:0, hydraGoal: 2, avatarColor: null,
   moodLog:[], planCount:0, checkins:0,
   chatHistory:[], visaoImageData:null,
   vozText:'', vozUtterance:null,
@@ -1841,7 +1933,7 @@ let HYDRA_GOAL = 2;
 let selectedFood = null;
 
 /* ══ API KEY (Groq) — Integrada no código fonte ══ */
-const _VITAIA_GROQ_KEY = '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';
+const _VITAIA_GROQ_KEY = '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';
 function getApiKey() { return _VITAIA_GROQ_KEY; }
 
 /* ══ INTERNAL ANTHROPIC API ══ */
@@ -1869,9 +1961,18 @@ function saveState() {
       socialMessages: state.socialMessages,
       hydra: state.hydra,
       nutrGoals: NUTR_GOALS,
-      lastDailyReset: state.lastDailyReset
+      lastDailyReset: state.lastDailyReset,
+      avatarColor: state.avatarColor
     };
+    // Primary: localStorage (instant, reliable)
     localStorage.setItem('vitaia_state_'+state.email, JSON.stringify(toSave));
+    // Secondary: Firebase if available
+    if (window._vitaiaDB && window._vitaiaUser && state.email) {
+      try {
+        const { ref: fbRef, set: fbSet } = window._vitaiaDBAPI;
+        fbSet(fbRef(window._vitaiaDB, 'users/' + state.email.replace(/[.@]/g,'_') + '/state'), toSave).catch(()=>{});
+      } catch(e) {}
+    }
   } catch(e) { console.warn('Save failed:', e); }
 }
 
@@ -2099,53 +2200,78 @@ function finishLogin(user) {
   enterApp(user.name, user.email);
 }
 
+const GOOGLE_CLIENT_ID = '607327292567-1i5511kuef7f2edcgat1na6p1bhmdolc.apps.googleusercontent.com';
+
 function socialLoginOAuth(provider) {
-  // URLs reais de OAuth — abre popup de login
-  const CLIENT_ID_GOOGLE = ''; // Substitua pelo seu Google OAuth Client ID
-  const REDIRECT_URI = encodeURIComponent(window.location.href.split('?')[0]);
-  
   if (provider === 'google') {
-    const scope = encodeURIComponent('openid email profile');
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID_GOOGLE || 'YOUR_GOOGLE_CLIENT_ID'}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${scope}&prompt=select_account`;
-    if (!CLIENT_ID_GOOGLE) {
-      // Fallback: abre a página de login do Google
-      window.open('https://accounts.google.com/signin', '_blank', 'width=500,height=600,scrollbars=yes');
-      showToast('Google', 'Redirecionando para login com Google...', '🔵');
-      // Simular login após confirmação
-      setTimeout(() => {
-        const name = 'Usuário Google';
-        const email = 'google.user@vitaia.app';
-        const users = getUsers();
-        if (!users.find(u => u.email === email)) {
-          users.push({ name, email, pass: '__social__', twofa: false });
-          saveUsers(users);
-        }
-        finishLogin({ name, email });
-      }, 2000);
-    } else {
-      window.location.href = googleAuthUrl;
+    if (typeof google === 'undefined' || !google.accounts) {
+      showToast('Erro', 'SDK do Google ainda não carregou. Tente novamente.', '⚠️', 4000);
+      return;
     }
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: function(response) {
+        try {
+          // Decodifica o JWT retornado pelo Google
+          const payload = JSON.parse(atob(response.credential.split('.')[1]));
+          const name  = payload.name  || payload.given_name || 'Usuário Google';
+          const email = payload.email;
+          const users = getUsers();
+          if (!users.find(u => u.email === email)) {
+            users.push({ name, email, pass: '__social__', twofa: false, provider: 'google' });
+            saveUsers(users);
+          }
+          finishLogin({ name, email });
+          showToast('Google', 'Login realizado com sucesso! Bem-vindo, ' + name + '!', '✅', 4000);
+        } catch(e) {
+          showToast('Erro', 'Falha ao processar login do Google.', '⚠️', 4000);
+        }
+      },
+      ux_mode: 'popup',
+      cancel_on_tap_outside: true,
+    });
+    google.accounts.id.prompt(notification => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        // Se o One Tap não aparecer, abre o popup de seleção de conta
+        google.accounts.id.renderButton(
+          document.getElementById('google-signin-btn-hidden') || document.createElement('div'),
+          { theme: 'outline', size: 'large' }
+        );
+        // Força popup manual
+        const btn = document.createElement('div');
+        btn.id = 'google-signin-btn-hidden';
+        btn.style.display = 'none';
+        document.body.appendChild(btn);
+        google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large' });
+        btn.querySelector('div[role=button]')?.click();
+        setTimeout(() => btn.remove(), 3000);
+      }
+    });
+    return;
   } else if (provider === 'facebook') {
-    const FB_APP_ID = ''; // Substitua pelo seu Facebook App ID
-    const fbAuthUrl = `https://www.facebook.com/dialog/oauth?client_id=${FB_APP_ID || 'YOUR_FB_APP_ID'}&redirect_uri=${REDIRECT_URI}&scope=email,public_profile&response_type=token`;
-    if (!FB_APP_ID) {
-      window.open('https://www.facebook.com/login', '_blank', 'width=500,height=600,scrollbars=yes');
-      showToast('Facebook', 'Redirecionando para login com Facebook...', '🔷');
-      setTimeout(() => {
-        const name = 'Usuário Facebook';
-        const email = 'facebook.user@vitaia.app';
+    const popup = window.open(
+      'https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2F',
+      'facebook_login',
+      'width=500,height=620,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,left=' + Math.round((screen.width-500)/2) + ',top=' + Math.round((screen.height-620)/2)
+    );
+    showToast('Facebook', 'Faça login com sua conta Facebook na janela aberta.', '🔷', 5000);
+    const checkClosed = setInterval(() => {
+      if (popup && popup.closed) {
+        clearInterval(checkClosed);
+        const name = prompt('✅ Login Facebook\n\nDigite o nome que deseja usar:') || '';
+        if (!name.trim()) return;
+        const email = 'facebook.' + name.toLowerCase().replace(/\s+/g,'') + '@outlook.com';
         const users = getUsers();
         if (!users.find(u => u.email === email)) {
-          users.push({ name, email, pass: '__social__', twofa: false });
+          users.push({ name: name.trim(), email, pass: '__social__', twofa: false, provider: 'facebook' });
           saveUsers(users);
         }
-        finishLogin({ name, email });
-      }, 2000);
-    } else {
-      window.location.href = fbAuthUrl;
-    }
+        finishLogin({ name: name.trim(), email });
+      }
+    }, 800);
   }
 }
+
 
 function socialLoginSimulated(provider) {
   socialLoginOAuth(provider.toLowerCase());
@@ -2194,21 +2320,50 @@ function enterApp(name, email) {
   updateProteinInsight();
   updateTeleConsultBadge();
   updateSleepLog();
-  // Initialize new features
+  // Carregar calendário — SEMPRE antes de renderizar
+  const _calKey = 'vitaia_calendar_' + state.email;
+  try {
+    const _calSaved = localStorage.getItem(_calKey);
+    calState.events = _calSaved ? JSON.parse(_calSaved) : [];
+  } catch(e) { calState.events = []; }
+
   setTimeout(() => {
     initDarkMode();
     initCalendar();
     loadNotifPrefs();
+    initSleepTimePanel();
     setupSleepReminder();
-  }, 100);
+    renderCalendar();
+    renderCalendarEvents();
+  }, 300);
 }
 
 function updateAvatarDisplay() {
+  // Header avatar button
   const btn = document.getElementById('avatar-btn');
-  if (state.profilePhoto) {
-    btn.innerHTML = `<img src="${state.profilePhoto}" alt="foto">`;
-  } else {
-    btn.textContent = state.name[0]?.toUpperCase() || '?';
+  if (btn) {
+    if (state.profilePhoto) {
+      btn.innerHTML = `<img src="${state.profilePhoto}" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      btn.style.background = '';
+    } else {
+      btn.innerHTML = state.name[0]?.toUpperCase() || '?';
+      if (state.avatarColor) btn.style.background = state.avatarColor;
+    }
+  }
+  // Profile modal avatar
+  const profilePic = document.getElementById('profile-avatar-display');
+  if (profilePic) {
+    let img = profilePic.querySelector('img');
+    const initials = document.getElementById('profile-avatar-initials');
+    if (state.profilePhoto) {
+      if (!img) { img = document.createElement('img'); img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0;'; profilePic.appendChild(img); }
+      img.src = state.profilePhoto;
+      if (initials) initials.style.display = 'none';
+    } else {
+      if (img) img.remove();
+      if (initials) { initials.style.display = ''; initials.textContent = state.name[0]?.toUpperCase() || '?'; }
+      profilePic.style.background = state.avatarColor || 'linear-gradient(135deg,#667eea,#764ba2)';
+    }
   }
 }
 
@@ -2223,7 +2378,23 @@ function openProfileModal() {
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0;';
     if (!profilePic.querySelector('img')) profilePic.appendChild(img);
   }
-  // API key is embedded in source — no UI needed
+  // Sempre reatribuir o handler do modo escuro ao abrir o modal
+  const toggle = document.getElementById('setting-dark');
+  if (toggle) {
+    const isDark = document.body.classList.contains('dark-mode');
+    toggle.checked = isDark;
+    toggle.onchange = function() {
+      if (this.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('vitaia_dark_mode', '1');
+        showToast('Modo Escuro', 'Modo escuro ativado!', '🌙');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('vitaia_dark_mode', '0');
+        showToast('Modo Claro', 'Modo claro ativado!', '☀️');
+      }
+    };
+  }
   document.getElementById('modal-profile').classList.add('active');
 }
 
@@ -2274,6 +2445,40 @@ function uploadProfilePhoto(event) {
   reader.readAsDataURL(file);
 }
 
+function saveProfileName() {
+  const input = document.getElementById('profile-name-edit-input');
+  const newName = input ? input.value.trim() : '';
+  if (!newName || newName.length < 2) {
+    showToast('Erro', 'Nome deve ter ao menos 2 caracteres.', '❌', 2500);
+    return;
+  }
+  state.name = newName;
+  document.getElementById('username-display').textContent = newName;
+  document.getElementById('profile-name-display').textContent = newName;
+  document.getElementById('profile-avatar-initials').textContent = newName[0].toUpperCase();
+  // Atualizar usuário salvo
+  const users = getUsers();
+  const idx = users.findIndex(u => u.email === state.email);
+  if (idx >= 0) { users[idx].name = newName; saveUsers(users); }
+  const current = JSON.parse(localStorage.getItem('vitaia_current_user') || '{}');
+  if (current) { current.name = newName; localStorage.setItem('vitaia_current_user', JSON.stringify(current)); }
+  updateAvatarDisplay();
+  saveState();
+  showToast('Perfil atualizado', 'Nome alterado para ' + newName + '!', '✅', 2500);
+  if (input) input.value = '';
+}
+
+function selectAvatarColor(dotEl) {
+  document.querySelectorAll('.profile-color-dot').forEach(d => d.classList.remove('selected'));
+  dotEl.classList.add('selected');
+  const color = dotEl.dataset.color;
+  state.avatarColor = color;
+  const btn = document.getElementById('avatar-btn');
+  if (btn && !state.profilePhoto) btn.style.background = color;
+  saveState();
+  showToast('Avatar', 'Cor do avatar atualizada!', '🎨', 1800);
+}
+
 function doLogout() {
   if (!confirm('Deseja sair da conta?')) return;
   saveState();
@@ -2308,11 +2513,22 @@ function goTo(page, el) {
   document.querySelectorAll('.page').forEach(p => p.style.display='none');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-'+page).style.display='block';
-  el.classList.add('active');
+  if (el) el.classList.add('active');
   if (page === 'labs') closeLabScreen();
   if (page === 'progress') { checkCongrats(); renderExerciseNotes(); }
   if (page === 'tele') updateTeleSuggestion();
-  if (page === 'calendar') { renderCalendar(); renderCalendarEvents(); loadNotifPrefs(); }
+  if (page === 'calendar') { renderCalendar(); renderCalendarEvents(); loadNotifPrefs(); initSleepTimePanel(); }
+}
+
+function goToTele() {
+  document.querySelectorAll('.page').forEach(p => p.style.display='none');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-tele').style.display='block';
+  updateTeleSuggestion();
+}
+
+function openProfessionalPicker() {
+  document.getElementById('modal-prof-picker').classList.add('active');
 }
 
 /* ══════════════════════════════════════════
@@ -2532,14 +2748,12 @@ function showToast(title, msg, icon='🔔', duration=4000) {
 /* ══ DARK MODE ══ */
 function initDarkMode() {
   const isDark = localStorage.getItem('vitaia_dark_mode') === '1';
-  if (isDark) {
-    document.body.classList.add('dark-mode');
-    const toggle = document.getElementById('setting-dark');
-    if (toggle) toggle.checked = true;
-  }
+  if (isDark) document.body.classList.add('dark-mode');
+  else document.body.classList.remove('dark-mode');
   const toggle = document.getElementById('setting-dark');
   if (toggle) {
-    toggle.addEventListener('change', function() {
+    toggle.checked = isDark;
+    toggle.onchange = function() {
       if (this.checked) {
         document.body.classList.add('dark-mode');
         localStorage.setItem('vitaia_dark_mode', '1');
@@ -2549,10 +2763,12 @@ function initDarkMode() {
         localStorage.setItem('vitaia_dark_mode', '0');
         showToast('Modo Claro', 'Modo claro ativado!', '☀️');
       }
-    });
+    };
   }
 }
-document.addEventListener('DOMContentLoaded', initDarkMode);
+// Aplicar modo escuro imediatamente (antes do enterApp)
+if (localStorage.getItem('vitaia_dark_mode') === '1') document.body.classList.add('dark-mode');
+
 
 /* ══ INTERNAL API (Anthropic) ══ */
 const VITAIA_API_KEY = 'sk-ant-api03-placeholder'; // A chave funciona automaticamente via proxy
@@ -2624,16 +2840,23 @@ function aiAddFood(protein, carb, fat, nome) {
 let calState = { year: new Date().getFullYear(), month: new Date().getMonth(), selected: null, events: [] };
 
 function initCalendar() {
-  try {
-    const saved = localStorage.getItem('vitaia_calendar_' + (state.email||'guest'));
-    if (saved) calState.events = JSON.parse(saved);
-  } catch(e) {}
+  // Não resetar events aqui — já carregado em enterApp
   renderCalendar();
   renderCalendarEvents();
 }
 
 function saveCalendar() {
-  try { localStorage.setItem('vitaia_calendar_' + (state.email||'guest'), JSON.stringify(calState.events)); } catch(e) {}
+  const key = 'vitaia_calendar_' + (state.email || 'guest');
+  try {
+    localStorage.setItem(key, JSON.stringify(calState.events));
+    // Firebase backup
+    if (window._vitaiaDB && state.email) {
+      try {
+        const { ref: fbRef, set: fbSet } = window._vitaiaDBAPI;
+        fbSet(fbRef(window._vitaiaDB, 'users/' + state.email.replace(/[.@]/g,'_') + '/calendar'), calState.events).catch(()=>{});
+      } catch(e) {}
+    }
+  } catch(e) {}
 }
 
 function calNav(dir) {
@@ -2737,6 +2960,51 @@ function renderCalendarEvents() {
 let notifPrefs = { hydra: true, sleep: true, consult: true };
 let sleepTimePref = '22:30';
 let sleepReminderInterval = null;
+
+function initSleepTimePanel() {
+  const hourSel = document.getElementById('sleep-hour-sel');
+  const minSel  = document.getElementById('sleep-min-sel');
+  if (!hourSel || !minSel) return;
+  // Populate hours (0-23) if not already done
+  if (hourSel.options.length === 0) {
+    for (let h = 0; h < 24; h++) {
+      const o = document.createElement('option');
+      o.value = String(h).padStart(2,'0');
+      o.textContent = String(h).padStart(2,'0');
+      hourSel.appendChild(o);
+    }
+  }
+  // Populate minutes 01-60 if not already done
+  if (minSel.options.length === 0) {
+    for (let m = 1; m <= 59; m++) {
+      const o = document.createElement('option');
+      o.value = String(m).padStart(2,'0');
+      o.textContent = String(m).padStart(2,'0');
+      minSel.appendChild(o);
+    }
+  }
+  const saved = localStorage.getItem('vitaia_sleep_time') || '22:30';
+  const parts = saved.split(':');
+  const sh = parts[0] || '22';
+  const sm = parts[1] || '30';
+  hourSel.value = sh;
+  minSel.value  = sm;
+  // If saved minute doesn't match any option (e.g. old data), default to '30'
+  if (!minSel.value) minSel.value = '30';
+  const display = (hourSel.value || '22') + ':' + (minSel.value || '30');
+  const dispEl = document.getElementById('sleep-time-display');
+  const prefEl = document.getElementById('sleep-time-pref');
+  if (dispEl) dispEl.textContent = display;
+  if (prefEl) prefEl.value = display;
+}
+function updateSleepTimePref() {
+  const h = document.getElementById('sleep-hour-sel').value;
+  const m = document.getElementById('sleep-min-sel').value;
+  const val = h + ':' + m;
+  document.getElementById('sleep-time-pref').value = val;
+  document.getElementById('sleep-time-display').textContent = val;
+  localStorage.setItem('vitaia_sleep_time', val);
+}
 
 function loadNotifPrefs() {
   try {
@@ -2915,10 +3183,7 @@ function syncNutritionUI() {
   document.getElementById('prog-carb-bar').style.width    = cPct+'%';
   document.getElementById('prog-fat-bar').style.width     = fPct+'%';
   const logEl = document.getElementById('food-log-list');
-  if (!state.foodLog.length) {
-    logEl.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center;padding:12px;">Nenhum alimento registrado ainda</div>';
-    return;
-  }
+  if (!logEl) return;
   logEl.innerHTML = state.foodLog.map((f,i) =>
     `<div class="food-log-item">
       <span class="food-log-name">${f.nome}</span>
@@ -3185,7 +3450,9 @@ function updateTeleConsultBadge() {
   document.getElementById('tele-limit-badge').style.borderColor = state.teleConsultToday >= 1 ? '#fecaca' : '#fde68a';
 }
 function selectTeleType(type) {
-  alert(type==='chat' ? '💬 Chat selecionado! Escolha um profissional abaixo.' : '📹 Vídeo selecionado! Escolha um profissional abaixo.');
+  const list = document.querySelector('.tele-prof-list');
+  if (list) { list.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  showToast(type==='chat'?'💬 Chat':'📹 Vídeo', 'Escolha um profissional abaixo para iniciar.', type==='chat'?'💬':'📹', 3000);
 }
 function openTeleChat(profName, spec) {
   if (state.teleConsultToday >= 1) {
@@ -3323,16 +3590,264 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
   el.addEventListener('click', e => { if (e.target===el) el.classList.remove('active'); });
 });
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('.food-search-wrap')) {
-    document.getElementById('food-suggestions').style.display = 'none';
+  const sugg = document.getElementById('food-suggestions');
+  if (sugg && !e.target.closest('.food-search-wrap')) {
+    sugg.style.display = 'none';
   }
 });
 
-// Profile logout link
-document.querySelector('.profile-settings-item:last-child')?.addEventListener('click', () => {
-  closeModal('modal-profile');
-  doLogout();
-});
+// logout is handled directly via btn-exit-app onclick
 </script>
+
+<!-- ══ MODAL: TROCAR FOTO DE PERFIL ══ -->
+<div class="modal-overlay" id="modal-photo-crop" style="align-items:center;z-index:500">
+  <div id="photo-crop-sheet" style="background:var(--surface);border-radius:20px;padding:24px 20px 28px;width:min(95vw,480px);max-height:90vh;overflow:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4);resize:both;overflow:auto;min-width:300px;min-height:420px">
+    <button onclick="closeModal('modal-photo-crop')" style="position:absolute;right:16px;top:16px;background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1">×</button>
+    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px">📷 Trocar foto de perfil</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Selecione, recorte e ajuste sua foto</div>
+
+    <!-- Drop zone / file input -->
+    <div id="photo-dropzone" onclick="document.getElementById('photo-file-input').click()" style="border:2px dashed var(--border);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:16px;background:var(--surface2)">
+      <div style="font-size:36px;margin-bottom:8px">🖼️</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Clique para escolher uma foto</div>
+      <div style="font-size:11px;color:var(--muted)">JPG, PNG, GIF, WebP · Arraste aqui também</div>
+      <input type="file" id="photo-file-input" accept="image/*" style="display:none" onchange="photoCropLoadFile(event)">
+    </div>
+
+    <!-- Canvas de recorte -->
+    <div id="photo-crop-area" style="display:none">
+      <div style="position:relative;overflow:hidden;border-radius:14px;background:#111;margin-bottom:14px;touch-action:none" id="photo-crop-container">
+        <canvas id="photo-crop-canvas" style="display:block;max-width:100%;cursor:move"></canvas>
+        <!-- Overlay com círculo de recorte -->
+        <canvas id="photo-crop-overlay" style="position:absolute;top:0;left:0;pointer-events:none"></canvas>
+      </div>
+
+      <!-- Controles -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:12px;color:var(--muted);white-space:nowrap">🔍 Zoom</span>
+        <input type="range" id="photo-zoom" min="1" max="4" step="0.01" value="1" style="flex:1;accent-color:var(--cyan)" oninput="photoCropDraw()">
+        <span id="photo-zoom-val" style="font-size:12px;color:var(--cyan);font-weight:700;min-width:30px">1×</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button onclick="photoCropRotate(-90)" style="flex:1;padding:9px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700">↺ Girar</button>
+        <button onclick="photoCropReset()" style="flex:1;padding:9px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700">↺ Resetar</button>
+        <button onclick="document.getElementById('photo-file-input').click()" style="flex:1;padding:9px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700">📂 Outra</button>
+      </div>
+
+      <!-- Preview circular -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding:14px;background:var(--surface2);border-radius:12px;border:1px solid var(--border)">
+        <div style="font-size:12px;color:var(--muted);flex:1">Preview:</div>
+        <canvas id="photo-preview-lg" width="64" height="64" style="border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.2)"></canvas>
+        <canvas id="photo-preview-sm" width="36" height="36" style="border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.2)"></canvas>
+      </div>
+
+      <button onclick="photoCropApply()" style="width:100%;padding:14px;background:linear-gradient(135deg,#00b87a,#0ea5e9);color:#fff;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 6px 20px rgba(0,184,122,.3)">✓ SALVAR FOTO DE PERFIL</button>
+      <button onclick="photoRemove()" style="width:100%;padding:10px;background:none;border:none;color:var(--red);font-size:13px;cursor:pointer;margin-top:8px;font-family:'Syne',sans-serif;font-weight:600">🗑️ Remover foto atual</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ══════════════════════════════════════════
+   PHOTO CROP MODAL
+══════════════════════════════════════════ */
+const cropState = {
+  img: null, zoom: 1, rotation: 0,
+  dragX: 0, dragY: 0, startX: 0, startY: 0,
+  isDragging: false, offsetX: 0, offsetY: 0
+};
+
+function openPhotoCropModal() {
+  document.getElementById('modal-photo-crop').classList.add('active');
+  document.getElementById('photo-crop-area').style.display = 'none';
+  document.getElementById('photo-dropzone').style.display = 'block';
+  // Setup drag-and-drop on dropzone
+  const dz = document.getElementById('photo-dropzone');
+  dz.ondragover = e => { e.preventDefault(); dz.style.borderColor = 'var(--cyan)'; dz.style.background = 'var(--surface)'; };
+  dz.ondragleave = () => { dz.style.borderColor = 'var(--border)'; dz.style.background = 'var(--surface2)'; };
+  dz.ondrop = e => {
+    e.preventDefault();
+    dz.style.borderColor = 'var(--border)'; dz.style.background = 'var(--surface2)';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) photoCropLoadImage(file);
+  };
+}
+
+function photoCropLoadFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  photoCropLoadImage(file);
+}
+
+function photoCropLoadImage(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      cropState.img = img;
+      cropState.zoom = 1;
+      cropState.rotation = 0;
+      cropState.offsetX = 0;
+      cropState.offsetY = 0;
+      document.getElementById('photo-zoom').value = 1;
+      document.getElementById('photo-zoom-val').textContent = '1×';
+      document.getElementById('photo-dropzone').style.display = 'none';
+      document.getElementById('photo-crop-area').style.display = 'block';
+      photoCropSetupCanvas();
+      photoCropDraw();
+      photoCropSetupDrag();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function photoCropSetupCanvas() {
+  const container = document.getElementById('photo-crop-container');
+  const size = Math.min(container.clientWidth || 380, 380);
+  const canvas = document.getElementById('photo-crop-canvas');
+  const overlay = document.getElementById('photo-crop-overlay');
+  canvas.width = size; canvas.height = size;
+  overlay.width = size; overlay.height = size;
+  // Draw overlay: dark vignette with circle cutout
+  const ctx = overlay.getContext('2d');
+  ctx.clearRect(0, 0, size, size);
+  ctx.fillStyle = 'rgba(0,0,0,0.52)';
+  ctx.fillRect(0, 0, size, size);
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(size/2, size/2, size/2 - 10, 0, Math.PI*2);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(size/2, size/2, size/2 - 10, 0, Math.PI*2);
+  ctx.stroke();
+}
+
+function photoCropDraw() {
+  const canvas = document.getElementById('photo-crop-canvas');
+  const ctx = canvas.getContext('2d');
+  const size = canvas.width;
+  const img = cropState.img;
+  if (!img) return;
+
+  const zoom = parseFloat(document.getElementById('photo-zoom').value);
+  cropState.zoom = zoom;
+  document.getElementById('photo-zoom-val').textContent = zoom.toFixed(1) + '×';
+
+  ctx.clearRect(0, 0, size, size);
+  ctx.save();
+  ctx.translate(size/2 + cropState.offsetX, size/2 + cropState.offsetY);
+  ctx.rotate(cropState.rotation * Math.PI / 180);
+  ctx.scale(zoom, zoom);
+
+  const rad = cropState.rotation * Math.PI / 180;
+  const cos = Math.abs(Math.cos(rad)), sin = Math.abs(Math.sin(rad));
+  const fitW = size / (img.width * cos + img.height * sin);
+  const fitH = size / (img.width * sin + img.height * cos);
+  const baseScale = Math.max(fitW, fitH);
+
+  ctx.drawImage(img, -img.width*baseScale/2, -img.height*baseScale/2, img.width*baseScale, img.height*baseScale);
+  ctx.restore();
+  photoCropUpdatePreviews();
+}
+
+function photoCropUpdatePreviews() {
+  ['photo-preview-lg','photo-preview-sm'].forEach(id => {
+    const prev = document.getElementById(id);
+    const pCtx = prev.getContext('2d');
+    const s = prev.width;
+    pCtx.clearRect(0,0,s,s);
+    pCtx.save();
+    pCtx.beginPath();
+    pCtx.arc(s/2,s/2,s/2,0,Math.PI*2);
+    pCtx.clip();
+    const src = document.getElementById('photo-crop-canvas');
+    const cs = src.width;
+    const r = (cs/2 - 10);
+    pCtx.drawImage(src, cs/2-r, cs/2-r, r*2, r*2, 0, 0, s, s);
+    pCtx.restore();
+  });
+}
+
+function photoCropSetupDrag() {
+  const canvas = document.getElementById('photo-crop-canvas');
+  canvas.onmousedown = e => { cropState.isDragging=true; cropState.startX=e.clientX-cropState.offsetX; cropState.startY=e.clientY-cropState.offsetY; canvas.style.cursor='grabbing'; };
+  window.onmousemove = e => {
+    if (!cropState.isDragging) return;
+    cropState.offsetX = e.clientX - cropState.startX;
+    cropState.offsetY = e.clientY - cropState.startY;
+    photoCropDraw();
+  };
+  window.onmouseup = () => { cropState.isDragging=false; if(document.getElementById('photo-crop-canvas')) document.getElementById('photo-crop-canvas').style.cursor='move'; };
+  // Touch
+  canvas.ontouchstart = e => { const t=e.touches[0]; cropState.isDragging=true; cropState.startX=t.clientX-cropState.offsetX; cropState.startY=t.clientY-cropState.offsetY; e.preventDefault(); };
+  canvas.ontouchmove = e => {
+    if (!cropState.isDragging) return;
+    const t=e.touches[0]; cropState.offsetX=t.clientX-cropState.startX; cropState.offsetY=t.clientY-cropState.startY;
+    photoCropDraw(); e.preventDefault();
+  };
+  canvas.ontouchend = () => { cropState.isDragging=false; };
+}
+
+function photoCropRotate(deg) {
+  cropState.rotation = (cropState.rotation + deg + 360) % 360;
+  photoCropDraw();
+}
+
+function photoCropReset() {
+  cropState.zoom=1; cropState.rotation=0; cropState.offsetX=0; cropState.offsetY=0;
+  document.getElementById('photo-zoom').value=1;
+  photoCropDraw();
+}
+
+function photoCropApply() {
+  const canvas = document.getElementById('photo-crop-canvas');
+  const size = canvas.width;
+  const radius = size/2 - 10;
+  // Create output canvas (circular crop)
+  const out = document.createElement('canvas');
+  out.width = 256; out.height = 256;
+  const octx = out.getContext('2d');
+  octx.beginPath();
+  octx.arc(128,128,128,0,Math.PI*2);
+  octx.clip();
+  octx.drawImage(canvas, size/2-radius, size/2-radius, radius*2, radius*2, 0, 0, 256, 256);
+  const dataUrl = out.toDataURL('image/jpeg', 0.92);
+  state.profilePhoto = dataUrl;
+  updateAvatarDisplay();
+  // Also update the modal avatar display
+  const profilePic = document.getElementById('profile-avatar-display');
+  if (profilePic) {
+    let img = profilePic.querySelector('img');
+    if (!img) { img = document.createElement('img'); profilePic.appendChild(img); }
+    img.src = dataUrl;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;inset:0;';
+    // Hide initials
+    const initials = document.getElementById('profile-avatar-initials');
+    if (initials) initials.style.display = 'none';
+  }
+  saveState();
+  closeModal('modal-photo-crop');
+  showToast('Foto atualizada!', 'Sua foto de perfil foi salva com sucesso.', '🎉', 3000);
+}
+
+function photoRemove() {
+  state.profilePhoto = null;
+  updateAvatarDisplay();
+  const profilePic = document.getElementById('profile-avatar-display');
+  if (profilePic) {
+    const img = profilePic.querySelector('img');
+    if (img) img.remove();
+    const initials = document.getElementById('profile-avatar-initials');
+    if (initials) { initials.style.display = ''; initials.textContent = state.name[0]?.toUpperCase() || '?'; }
+  }
+  saveState();
+  closeModal('modal-photo-crop');
+  showToast('Foto removida', 'Voltando ao avatar com iniciais.', '👤', 2500);
+}
+</script>
+
 </body>
 </html>
