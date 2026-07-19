@@ -1051,7 +1051,8 @@ body.dark-mode {
   background: linear-gradient(135deg, var(--text) 40%, var(--cyan) 120%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.login-logo { background: linear-gradient(135deg, #fff, #dbe4ff); -webkit-background-clip: text; background-clip: text; }
+.login-logo { background: linear-gradient(135deg, var(--teal), var(--cyan-dark)); -webkit-background-clip: text; background-clip: text; }
+body.dark-mode .login-logo { background: linear-gradient(135deg, #fff, #dbe4ff); -webkit-background-clip: text; background-clip: text; }
 .insight-title { background: none; -webkit-background-clip: unset; color: #fff; }
 
 /* ── Avatar / brand com glow ── */
